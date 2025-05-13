@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ model_name | upper }} Prediction</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+        .container { width: 60%; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; }
+        img { max-width: 100%; margin-top: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ model_name | upper }} Model</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="xray" accept="image/*" required><br><br>
+            <button type="submit">Upload & Diagnose</button>
+        </form>
+
+        {% if image %}
+        <h3>Uploaded Image:</h3>
+        <img src="{{ image }}">
+        {% endif %}
+
+        {% if result[0][0] %}
+        <h3>Prediction:</h3>
+        <p><strong>{{ result[0][0] }}</strong> (Confidence: {{ result[0][1] }}%)</p>
+        {% endif %}
+    </div>
+</body>
+</html>
