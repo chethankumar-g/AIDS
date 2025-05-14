@@ -1,31 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ model_name | upper }} Prediction</title>
+    <!-- Link to Google Fonts for a modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
-        .container { width: 60%; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; }
-        img { max-width: 100%; margin-top: 20px; border-radius: 10px; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result h3 {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>{{ model_name | upper }} Model</h1>
+    <div class="container" style="text-align:center;">
+        <h1>{{ model_name | upper }} Model Prediction</h1>
         <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="xray" accept="image/*" required><br><br>
+            <input type="file" name="xray" accept="image/*" required><br>
             <button type="submit">Upload & Diagnose</button>
         </form>
 
-        {% if image %}
-        <h3>Uploaded Image:</h3>
-        <img src="{{ image }}">
+        {% if result[0] != -1 %}
+        <h3>PREDICTION </h3>
+        {% if result[0]>result[1] %}
+            <div class="result" style="background-color: green;text-align:center;">
+                <h2>Person is Healthy</h2>
+            </div>
+        {% else %}
+            <div class="result" style="background-color: red;text-align:center;">
+                <h2>Person has Pneumonia</h2>
+            </div>
         {% endif %}
 
-        {% if result[0][0] %}
-        <h3>Prediction:</h3>
-        <p><strong>{{ result[0][0] }}</strong> (Confidence: {{ result[0][1] }}%)</p>
+        <div class="result">
+            <p>Probability that person is Healthy: <strong>{{ result[0]*100 }}%</strong></p>
+            <p>Probability that person has Pneumonia: <strong>{{ result[1]*100 }}%</strong></p>
+        </div>
+        {% endif %}
+    
+        {% if image %}
+        <h3>Uploaded Image:</h3>
+        <img src="{{ image }}" alt="Uploaded X-Ray">
         {% endif %}
     </div>
+
 </body>
 </html>
