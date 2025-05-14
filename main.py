@@ -37,15 +37,14 @@ async def read_root(request: Request):
 
 @app.get("/{model_name}", response_class=HTMLResponse)
 async def show_model_page(model_name: str, request: Request):
-    print(model_name)
-    print(model_dict)
+    
     if model_name not in model_dict:
         return HTMLResponse(content="Model not found", status_code = status.HTTP_404_NOT_FOUND)
     return templates.TemplateResponse("model.html", {
         "request": request,
         "model_name": model_name,
         "image": None,
-        "result": np.array([[0]])
+        "result": np.array([-1])
     })
 
 @app.post("/{model_name}", response_class=HTMLResponse)
@@ -62,9 +61,10 @@ async def predict(model_name: str, request: Request, xray: UploadFile = File(...
             shutil.copyfileobj(xray.file, buffer)
     except Exception as e:
         print("File Error: ",e)
+
     processed_image = preprocess_image(upload_path)
-    result = model_dict[model_name]["model"].predict(processed_image)
-    
+    _result = model_dict[model_name]["model"].predict(processed_image)[0]
+    result = list(map(lambda x: round(x,2), _result))
     
     return templates.TemplateResponse("model.html", {
                                         "request": request,
@@ -73,7 +73,6 @@ async def predict(model_name: str, request: Request, xray: UploadFile = File(...
                                         "result": result
                                         }
                                       )
-
 
 if __name__ == '__main__':
     import uvicorn
