@@ -55,6 +55,10 @@ An Automated Infection Detection System that utilizes advanced deep learning alg
 - `templates/`: Contains HTML templates for the web interface.
 - `static/uploads/`: Directory for storing uploaded images.
 
+## Dataset
+
+Pneumonia Chest X-Ray Dataset : https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia
+  
 ## License
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
